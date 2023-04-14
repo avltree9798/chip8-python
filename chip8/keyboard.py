@@ -3,8 +3,10 @@ from chip8.config import (
 )
 import pygame
 
+
 def _is_keyboard_inbound(key: int):
     assert (key >= 0 and key < CHIP8_TOTAL_KEY)
+
 
 class Keyboard:
     keyboard: list = [False]*CHIP8_TOTAL_KEY
@@ -24,14 +26,13 @@ class Keyboard:
         0xC: pygame.K_c,
         0xD: pygame.K_d,
         0xE: pygame.K_e,
-        0xF: pygame.K_f
+        0xF: pygame.K_f,
     }
 
     def map(self, key):
-        for k,v in self.mapping.items():
+        for k, v in self.mapping.items():
             if v == key:
                 return k
-        
         return None
 
     def _is_down(self, key: int):
@@ -45,4 +46,3 @@ class Keyboard:
     def up(self, key: int):
         _is_keyboard_inbound(key)
         self.keyboard[key] = False
-

@@ -4,36 +4,40 @@ from chip8.config import (
 )
 from chip8.memory import Memory
 
+
 def _check_bounds(x: int, y: int):
     assert (x >= 0 and x < CHIP8_WIDTH and y >= 0 and y < CHIP8_HEIGHT)
 
+
 class Screen:
-    pixels = [[False for _ in range(CHIP8_WIDTH)] for __ in range(CHIP8_HEIGHT)]
     memory: Memory
 
     def __init__(self, memory: Memory) -> None:
+        self.pixels = []
+        self.cls()
         self.memory = memory
-        
+
     def set(self, x: int, y: int):
-        print(f"SET [x={x}], [y={y}]")
-        _check_bounds(x,y)
+        _check_bounds(x, y)
         self.pixels[y][x] = True
-    
+
     def unset(self, x: int, y: int):
-        _check_bounds(x,y)
+        _check_bounds(x, y)
         self.pixels[y][x] = False
-    
+
     def is_set(self, x: int, y: int):
-        _check_bounds(x,y)
+        _check_bounds(x, y)
         return self.pixels[y][x]
 
     def cls(self):
-        self.pixels = [[False for _ in range(CHIP8_WIDTH)] for __ in range(CHIP8_HEIGHT)]
+        W = CHIP8_WIDTH
+        H = CHIP8_HEIGHT
+        self.pixels = [[False for _ in range(W)] for _ in range(H)]
 
-    def draw_sprite(self, x: int, y: int, base_address_sprite: int, num: int=5) -> bool:
+    def draw_sprite(self, x: int, y: int, base_addr: int, num: int = 5):
         pixel_changed = False
         for ly in range(num):
-            c = self.memory.memory[ly+base_address_sprite]
+            c = self.memory.memory[ly+base_addr]
             for lx in range(8):
                 if (c & (0b10000000 >> lx)) == 0:
                     continue

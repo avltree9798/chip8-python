@@ -1,6 +1,7 @@
 from chip8.emulator import Emulator
 import sys
 
+
 def main():
     argc = len(sys.argv)
     argv = sys.argv
@@ -9,13 +10,13 @@ def main():
         return -1
     filename = argv[1]
     print(f'ROM to load is: {filename}')
-    try:
-        with open(filename, 'rb') as f:
-            buffer = f.read()
-            emulator = Emulator(buffer, filename)
-            return emulator.run()
-    except:
-         return -1
+    emulator: Emulator = None
+    with open(filename, 'rb') as f:
+        buffer = f.read()
+        emulator = Emulator(buffer, filename)
+
+    return emulator.run()
+
 
 if __name__ == '__main__':
     retc = main()

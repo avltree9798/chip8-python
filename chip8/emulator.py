@@ -7,15 +7,16 @@ from chip8.config import (
     EMULATOR_WINDOW_TITLE
 )
 from chip8.processor import Chip8
-# import beepy as beep
 import os
 import pygame
 import time
 
 
-def beep(frequency, duration):
+def beep(duration):
     # brew install sox
-    os.system('play -nq -t coreaudio synth {} sine {}'.format(duration, frequency))
+    os.system('play --no-show-progress --null\
+               --channels 1 synth %s triangle %f' % (duration, 440))
+
 
 class Emulator:
     def __init__(self, buffer, filename):
@@ -36,16 +37,15 @@ class Emulator:
         for y in range(CHIP8_HEIGHT):
             for x in range(CHIP8_WIDTH):
                 if self.chip8.screen.is_set(x, y):
-                    white_surface = pygame.Surface((CHIP8_WINDOW_MULTIPLIER, CHIP8_WINDOW_MULTIPLIER))
+                    white_surface = pygame.Surface((
+                        CHIP8_WINDOW_MULTIPLIER,
+                        CHIP8_WINDOW_MULTIPLIER
+                    ))
                     white_surface.fill(CHIP8_COLOUR_WHITE)
-                    self.screen.blit(
-                        white_surface,
-                        (
-                            x * CHIP8_WINDOW_MULTIPLIER, 
-                            y * CHIP8_WINDOW_MULTIPLIER
-                        )
-                    )
-        
+                    self.screen.blit(white_surface, (
+                        x * CHIP8_WINDOW_MULTIPLIER,
+                        y * CHIP8_WINDOW_MULTIPLIER
+                    ))
         pygame.display.flip()
 
     def handle_event(self):
@@ -63,14 +63,14 @@ class Emulator:
                     virtual_key = self.chip8.keyboard.map(key)
                     if virtual_key:
                         self.chip8.keyboard.up(virtual_key)
-    
-    def handle_timer(self, clock):
+
+    def handle_timer(self):
         if self.chip8.register.delay_timer > 0:
-            clock.tick(10)
+            time.sleep(1/1000)
             self.chip8.register.delay_timer -= 1
         if self.chip8.register.sound_timer > 0:
-            duration = (100*self.chip8.register.sound_timer)/1000
-            beep(1500, duration)
+            duration = (self.chip8.register.sound_timer)/60
+            beep(duration)
             self.chip8.register.sound_timer = 0
 
     def execution(self):
@@ -82,14 +82,11 @@ class Emulator:
         assert self.buffer
 
         self.chip8.load(self.buffer, len(self.buffer))
-        clock = pygame.time.Clock()
         while self.running:
             self.handle_event()
-            self.handle_timer(clock)
+            self.handle_timer()
             self.render()
             self.execution()
 
         pygame.quit()
         return 0
-
-
