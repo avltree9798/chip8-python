@@ -25,7 +25,6 @@ class Screen:
     
     def is_set(self, x: int, y: int):
         _check_bounds(x,y)
-        retval = self.pixels[y][x]  
         return self.pixels[y][x]
 
     def cls(self):

@@ -6,7 +6,7 @@ from chip8.config import (
     CHIP8_WINDOW_MULTIPLIER,
     EMULATOR_WINDOW_TITLE
 )
-from chip8.chip8 import Chip8
+from chip8.processor import Chip8
 # import beepy as beep
 import os
 import pygame
@@ -64,26 +64,30 @@ class Emulator:
                     if virtual_key:
                         self.chip8.keyboard.up(virtual_key)
     
-    def handle_timer(self):
+    def handle_timer(self, clock):
         if self.chip8.register.delay_timer > 0:
-            time.sleep(0.000001)
+            clock.tick(10)
             self.chip8.register.delay_timer -= 1
         if self.chip8.register.sound_timer > 0:
             duration = (100*self.chip8.register.sound_timer)/1000
             beep(1500, duration)
             self.chip8.register.sound_timer = 0
 
+    def execution(self):
+        opcode = self.chip8.memory.get_short(self.chip8.register.PC)
+        self.chip8.register.PC += 2
+        self.chip8.exec(opcode)
+
     def run(self):
         assert self.buffer
 
         self.chip8.load(self.buffer, len(self.buffer))
+        clock = pygame.time.Clock()
         while self.running:
             self.handle_event()
+            self.handle_timer(clock)
             self.render()
-            self.handle_timer()
-            opcode = self.chip8.memory.get_short(self.chip8.register.PC)
-            self.chip8.register.PC += 2
-            self.chip8.exec(opcode)
+            self.execution()
 
         pygame.quit()
         return 0

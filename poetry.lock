@@ -21,7 +21,7 @@ version = "2.3.0"
 description = "Python Game Development"
 category = "main"
 optional = false
-python-versions = ">=3.10"
+python-versions = ">=3.6"
 files = [
     {file = "pygame-2.3.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:3e9535cf1af0c6ca38d94e0b492fc41057d7bf05e9bd64d3ed3e216d336d6d11"},
     {file = "pygame-2.3.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:23bd3c3a6d4e8acddee2297d609dbc5953d6ba99b0f0cc5ccc2f567889db3785"},
