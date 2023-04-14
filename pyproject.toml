@@ -1,0 +1,19 @@
+[tool.poetry.dependencies]
+python = "^3.10"
+pygame = "^2.3.0"
+beepy = "^1.0.7"
+
+[build-system]
+requires = ["poetry-core>=1.2.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "chip8-python"
+version = "0.1.0"
+description = ""
+authors = ["Anthony V <anthonyviriya98@gmail.com>"]
+readme = "README.md"
+packages = [{include = "chip8"}]
+
+[tool.poetry.scripts]
+my-script = "chip8.__main__:main"
